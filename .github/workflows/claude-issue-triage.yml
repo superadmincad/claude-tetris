@@ -1,0 +1,72 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  triage:
+    # Skip issues that already tag @claude — those are handled by claude.yml
+    if: >-
+      !contains(github.event.issue.body, '@claude') &&
+      !contains(github.event.issue.title, '@claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Ensure label catalog exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "bug" --color d73a4a --description "Algo no funciona como se espera" --force
+          gh label create "enhancement" --color a2eeef --description "Nueva funcionalidad o mejora" --force
+          gh label create "question" --color d876e3 --description "Pregunta o duda" --force
+          gh label create "documentation" --color 0075ca --description "Relacionado con documentación" --force
+          gh label create "refactor" --color fbca04 --description "Mejora interna sin cambiar comportamiento" --force
+          gh label create "gameplay" --color 5319e7 --description "Lógica del juego: piezas, colisiones, puntaje, niveles" --force
+          gh label create "ui-ux" --color 1d76db --description "Interfaz, canvas, estilos, controles" --force
+          gh label create "performance" --color e99695 --description "Rendimiento o fluidez" --force
+          gh label create "needs-triage" --color ededed --description "Aún no se determinó el tipo de problema" --force
+          gh label create "priority:high" --color b60205 --description "Prioridad alta" --force
+          gh label create "priority:medium" --color fbca04 --description "Prioridad media" --force
+          gh label create "priority:low" --color 0e8a16 --description "Prioridad baja" --force
+
+      - name: Run Claude Issue Triage
+        id: claude-triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Analiza el issue #${{ github.event.issue.number }} de este repositorio (un juego de
+            Tetris en JavaScript vanilla, ver `game.js`, `index.html`, `style.css`, y `CLAUDE.md`
+            para contexto de la arquitectura).
+
+            Pasos:
+            1. Lee el issue con `gh issue view ${{ github.event.issue.number }}`.
+            2. Revisa el código relevante del repositorio (usa Read/Grep/Glob) para entender
+               el contexto técnico real del problema descrito.
+            3. Elige labels ÚNICAMENTE de este catálogo fijo (no crees labels nuevos ni uses
+               otros nombres):
+               - Tipo (elige exactamente 1): bug, enhancement, question, documentation, refactor
+               - Área (opcional, 0 o 1): gameplay, ui-ux, performance
+               - Prioridad (opcional, 0 o 1): priority:high, priority:medium, priority:low
+               - Usa "needs-triage" únicamente si no puedes determinar el tipo con confianza.
+               Aplica los labels elegidos con:
+               `gh issue edit ${{ github.event.issue.number }} --add-label "label1,label2,..."`
+            4. Publica UN SOLO comentario en ESPAÑOL con
+               `gh issue comment ${{ github.event.issue.number }} --body "..."` que incluya:
+               - Resumen breve del problema.
+               - Causa raíz probable (con referencias concretas a archivo/función, ej.
+                 `game.js:collide`, `lockPiece`, `tryRotate`).
+               - Pasos sugeridos para implementar la solución (a alto nivel).
+               No implementes ni modifiques código — este workflow solo diagnostica, la
+               solución se hará después en un paso separado.
+          claude_args: |
+            --allowed-tools "Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Read,Grep,Glob"
