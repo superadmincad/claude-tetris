@@ -84,6 +84,21 @@ body {
   transform: scale(1.08);
 }
 
+.skin-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 36px;
+  background: var(--toggle-bg);
+  color: var(--text);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .game-title {
   text-align: center;
   font-size: 32px;
