@@ -23,6 +23,11 @@
   --restart-text: #0f0f17;
   --restart-hover: #9bbdff;
   --toggle-bg: #1a1a25;
+  --highlight-bg: rgba(255, 213, 79, 0.18);
+  --highlight-color: #ffd54f;
+  --input-bg: #22222e;
+  --input-border: #3a3a5a;
+  --reset-color: #e57373;
 }
 
 body.light-theme {
@@ -44,6 +49,11 @@ body.light-theme {
   --restart-text: #ffffff;
   --restart-hover: #5b7ec2;
   --toggle-bg: #ffffff;
+  --highlight-bg: rgba(192, 57, 43, 0.1);
+  --highlight-color: #c0392b;
+  --input-bg: #ffffff;
+  --input-border: #c9c9d9;
+  --reset-color: #c0392b;
 }
 
 body {
@@ -225,4 +235,135 @@ kbd {
 
 #restart-btn:hover {
   background: var(--restart-hover);
+}
+
+.start-heading {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: var(--title-color);
+}
+
+/* ---- Estadísticas y récords ---- */
+#go-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+#go-extra.hidden {
+  display: none;
+}
+
+.stats-summary {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--control-text);
+}
+
+.stats-summary b {
+  display: block;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  color: var(--value-color);
+}
+
+.records-table {
+  width: 220px;
+}
+
+.records-table h3 {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--label-color);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.records-list {
+  list-style: decimal inside;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.record-item.highlight {
+  background: var(--highlight-bg);
+  color: var(--highlight-color);
+  font-weight: 700;
+}
+
+.no-records {
+  font-size: 12px;
+  color: var(--control-text);
+  font-style: italic;
+}
+
+#new-record-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+#new-record-form.hidden {
+  display: none;
+}
+
+#new-record-form label {
+  font-size: 12px;
+  color: var(--control-text);
+}
+
+#player-name {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: center;
+  width: 140px;
+}
+
+#save-record-btn {
+  background: var(--restart-bg);
+  color: var(--restart-text);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#save-record-btn:hover {
+  background: var(--restart-hover);
+}
+
+.reset-btn {
+  background: none;
+  border: 1px solid var(--reset-color);
+  color: var(--reset-color);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.reset-btn:hover {
+  background: var(--reset-color);
+  color: #fff;
 }
