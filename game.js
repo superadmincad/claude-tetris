@@ -46,8 +46,20 @@ const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
 const restartBtn = document.getElementById('restart-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const gameoverBox = document.getElementById('gameover-box');
+const pauseMenu = document.getElementById('pause-menu');
+const resumeBtn = document.getElementById('resume-btn');
+const pauseRestartBtn = document.getElementById('pause-restart-btn');
+const controlsToggleBtn = document.getElementById('controls-toggle-btn');
+const pauseControls = document.getElementById('pause-controls');
+const levelDownBtn = document.getElementById('level-down-btn');
+const levelUpBtn = document.getElementById('level-up-btn');
+const startLevelValue = document.getElementById('start-level-value');
 
-let board, current, next, hold, holdUsed, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+const MIN_START_LEVEL = 1;
+const MAX_START_LEVEL = 10;
+
+let board, current, next, hold, holdUsed, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId, startLevel = MIN_START_LEVEL;
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -263,22 +275,46 @@ function drawHold() {
 function endGame() {
   gameOver = true;
   cancelAnimationFrame(animId);
+  pauseMenu.classList.add('hidden');
+  gameoverBox.classList.remove('hidden');
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
   overlay.classList.remove('hidden');
+}
+
+function updateStartLevelDisplay() {
+  startLevelValue.textContent = startLevel;
+}
+
+function changeStartLevel(delta) {
+  startLevel = Math.min(MAX_START_LEVEL, Math.max(MIN_START_LEVEL, startLevel + delta));
+  updateStartLevelDisplay();
+}
+
+function showPauseMenu() {
+  gameoverBox.classList.add('hidden');
+  pauseControls.classList.add('hidden');
+  controlsToggleBtn.textContent = 'Ver controles';
+  updateStartLevelDisplay();
+  pauseMenu.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+}
+
+function hidePauseMenu() {
+  pauseMenu.classList.add('hidden');
+  overlay.classList.add('hidden');
 }
 
 function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    hidePauseMenu();
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
-    overlayTitle.textContent = 'PAUSA';
-    overlayScore.textContent = '';
-    overlay.classList.remove('hidden');
+    showPauseMenu();
   }
 }
 
@@ -317,24 +353,26 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
   paused = false;
   gameOver = false;
   hold = null;
   holdUsed = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
   updateHUD();
+  pauseMenu.classList.add('hidden');
+  gameoverBox.classList.remove('hidden');
   overlay.classList.add('hidden');
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') { togglePause(); return; }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -366,5 +404,15 @@ document.addEventListener('keydown', e => {
 restartBtn.addEventListener('click', init);
 themeToggle.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
 
+resumeBtn.addEventListener('click', () => { if (paused) togglePause(); });
+pauseRestartBtn.addEventListener('click', init);
+controlsToggleBtn.addEventListener('click', () => {
+  const nowHidden = pauseControls.classList.toggle('hidden');
+  controlsToggleBtn.textContent = nowHidden ? 'Ver controles' : 'Ocultar controles';
+});
+levelDownBtn.addEventListener('click', () => changeStartLevel(-1));
+levelUpBtn.addEventListener('click', () => changeStartLevel(1));
+
+updateStartLevelDisplay();
 init();
 initTheme();

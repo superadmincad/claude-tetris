@@ -45,17 +45,47 @@
             <li><kbd>↓</kbd> bajar</li>
             <li><kbd>Space</kbd> caída</li>
             <li><kbd>C</kbd>/<kbd>Shift</kbd> reservar</li>
-            <li><kbd>P</kbd> pausa</li>
+            <li><kbd>P</kbd>/<kbd>Esc</kbd> pausa</li>
           </ul>
         </div>
       </aside>
     </div>
 
     <div id="overlay" class="overlay hidden">
-      <div class="overlay-box">
-        <p id="overlay-title">GAME OVER</p>
+      <div class="overlay-box" id="gameover-box">
+        <p class="overlay-title" id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
-        <button id="restart-btn">Reiniciar</button>
+        <button id="restart-btn" class="menu-btn">Reiniciar</button>
+      </div>
+
+      <div class="overlay-box hidden" id="pause-menu">
+        <p class="overlay-title">PAUSA</p>
+
+        <div class="pause-actions">
+          <button id="resume-btn" class="menu-btn">Reanudar</button>
+          <button id="pause-restart-btn" class="menu-btn">Reiniciar</button>
+          <button id="controls-toggle-btn" class="menu-btn">Ver controles</button>
+        </div>
+
+        <div id="pause-controls" class="controls hidden">
+          <ul>
+            <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+            <li><kbd>↑</kbd> rotar</li>
+            <li><kbd>↓</kbd> bajar</li>
+            <li><kbd>Space</kbd> caída</li>
+            <li><kbd>C</kbd>/<kbd>Shift</kbd> reservar</li>
+            <li><kbd>P</kbd>/<kbd>Esc</kbd> pausa</li>
+          </ul>
+        </div>
+
+        <div class="pause-level">
+          <span class="label">NIVEL INICIAL</span>
+          <div class="level-selector">
+            <button id="level-down-btn" aria-label="Disminuir nivel inicial">−</button>
+            <span id="start-level-value">1</span>
+            <button id="level-up-btn" aria-label="Aumentar nivel inicial">+</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
