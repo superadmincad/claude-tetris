@@ -226,3 +226,135 @@ kbd {
 #restart-btn:hover {
   background: var(--restart-hover);
 }
+
+.hidden {
+  display: none !important;
+}
+
+/* ---- Leaderboard ---- */
+.save-score-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#player-name {
+  width: 130px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--board-bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+#save-score-btn {
+  background: var(--restart-bg);
+  color: var(--restart-text);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#save-score-btn:hover {
+  background: var(--restart-hover);
+}
+
+.leaderboard-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.leaderboard-list {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.leaderboard-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.leaderboard-list li .rank {
+  color: var(--label-color);
+  min-width: 16px;
+}
+
+.leaderboard-list li .name {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-list li .score {
+  color: var(--value-color);
+  font-weight: 700;
+}
+
+.leaderboard-list li.empty {
+  color: var(--label-color);
+  justify-content: center;
+  font-family: inherit;
+}
+
+.leaderboard-list li.highlight {
+  background: var(--restart-bg);
+  color: var(--restart-text);
+}
+
+.leaderboard-list li.highlight .score {
+  color: var(--restart-text);
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--control-text);
+}
+
+.stats-row strong {
+  color: var(--value-color);
+}
+
+.overlay-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.secondary-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--control-text);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.secondary-btn:hover {
+  background: var(--kbd-bg);
+  color: var(--text);
+}
